@@ -1,11 +1,11 @@
 import { Router } from "express";
 
-import UserController from "../controllers/users.controller";
+import UserController from "../controllers/user.controller";
 
 export default class UserRoute {
   public path: string;
   public router: Router;
-  public userController;
+  public userController: UserController;
 
   constructor() {
     this.path = "/users";

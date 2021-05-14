@@ -1,9 +1,9 @@
-import { IsNumber, IsPhoneNumber, IsString, Length } from "class-validator";
+import { IsString, Length } from "class-validator";
 
 export default class Mobile {
   @IsString()
   @Length(2)
-  public carrier: string;
+  public carrierId: string;
 
   @IsString()
   @Length(10)

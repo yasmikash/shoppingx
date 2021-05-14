@@ -24,7 +24,6 @@ const getBodyErrors = (
       field: error.property,
       errors: error.constraints ? Object.values(error.constraints) : null,
     };
-    console.log(bodyError);
 
     generatedErrors.push(bodyError);
   });

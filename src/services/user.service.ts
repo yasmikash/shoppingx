@@ -9,14 +9,18 @@ import HttpException from "../exceptions/HttpException";
 
 export default class UserService {
   public usersCollection: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>;
+  public carrierCollection: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>;
 
   constructor() {
     this.usersCollection = db.collection("users");
+    this.carrierCollection = db.collection("carriers");
   }
 
   async getUser(userId: string) {
-    const user = await (await this.usersCollection.doc(userId).get()).data();
-    return user;
+    const user = (await this.usersCollection.doc(userId).get()).data();
+
+    if (user) return user;
+    else throw new HttpException(400, "No such user found", null);
   }
 
   async getUsers() {
@@ -43,6 +47,12 @@ export default class UserService {
         "Invalid data provided",
         getBodyErrors(errors, false)
       );
+
+    // Check if carrier exists
+    const carrier = (
+      await this.carrierCollection.doc(userInstace.mobile.carrierId).get()
+    ).data();
+    if (!carrier) return new HttpException(400, "No such carrier found", null);
 
     const createdUser = await this.usersCollection.doc().set(user);
     return createdUser;

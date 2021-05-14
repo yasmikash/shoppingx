@@ -1,11 +1,4 @@
-import {
-  IsLatitude,
-  IsNegative,
-  IsNumber,
-  IsString,
-  IS_LENGTH,
-  Length,
-} from "class-validator";
+import { IsString, Length } from "class-validator";
 
 export default class AddressModel {
   @IsString()

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 
-import UserService from "../services/users.service";
+import UserService from "../services/user.service";
 const userService = new UserService();
 
 export default class UserController {
@@ -11,7 +11,7 @@ export default class UserController {
   ): Promise<void> {
     try {
       const user = await userService.getUser(req.params.userId);
-      res.status(200).json(user);
+      res.status(201).json(user);
     } catch (error) {
       next(error);
     }
