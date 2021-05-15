@@ -16,6 +16,7 @@ export default class CarrierRoute {
   }
 
   initializeRoutes() {
-    this.router.post(`${this.path}`, this.carrierController.createItem);
+    this.router.get(`${this.path}`, this.carrierController.getCarriers);
+    this.router.post(`${this.path}`, this.carrierController.createCarrier);
   }
 }

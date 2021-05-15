@@ -17,6 +17,6 @@ export default class CategoryRoute {
 
   initializeRoutes() {
     this.router.get(`${this.path}`, this.categoryController.getCategories);
-    this.router.post(`${this.path}`, this.categoryController.createItem);
+    this.router.post(`${this.path}`, this.categoryController.createCategory);
   }
 }

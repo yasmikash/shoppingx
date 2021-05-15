@@ -17,8 +17,6 @@ export default class ItemService {
   }
 
   async createItem(item: ItemModel) {
-    // TODO validation logic should be implemented
-
     const itemInstace = plainToClass(ItemModel, item);
 
     const errors: ValidationError[] = await validate(itemInstace);
@@ -34,8 +32,7 @@ export default class ItemService {
     const category = (
       await this.categoryCollection.doc(itemInstace.categoryId).get()
     ).data();
-    if (!category)
-      return new HttpException(400, "No such category found", null);
+    if (!category) throw new HttpException(400, "No such category found", null);
 
     const createdItem = await this.itemsCollection.doc().set(item);
     return createdItem;

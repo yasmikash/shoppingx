@@ -17,7 +17,7 @@ export default class CategoryController {
     }
   }
 
-  async createItem(
+  async createCategory(
     req: Request,
     res: Response,
     next: NextFunction

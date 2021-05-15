@@ -7,7 +7,7 @@ import Category from "../models/item-category.model";
 import getBodyErrors from "../util/body-error.util";
 import HttpException from "../exceptions/HttpException";
 
-export default class CatregoryService {
+export default class CategoryService {
   public categoryCollection: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>;
 
   constructor() {
@@ -26,8 +26,6 @@ export default class CatregoryService {
   }
 
   async createCategory(category: Category) {
-    // TODO validation logic should be implemented
-
     const categoryInstace = plainToClass(Category, category);
 
     const errors: ValidationError[] = await validate(categoryInstace);

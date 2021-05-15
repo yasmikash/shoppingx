@@ -14,9 +14,18 @@ export default class CarrierService {
     this.carrierCollection = db.collection("carriers");
   }
 
-  async createCarrier(carrier: Carrier) {
-    // TODO validation logic should be implemented
+  async getCarriers() {
+    const carriers: any = [];
+    const snapshot = await this.carrierCollection.get();
 
+    snapshot.forEach((doc: any) => {
+      carriers.push({ [doc.id]: doc.data() });
+    });
+
+    return carriers;
+  }
+
+  async createCarrier(carrier: Carrier) {
     const carrierInstace = plainToClass(Carrier, carrier);
 
     const errors: ValidationError[] = await validate(carrierInstace);

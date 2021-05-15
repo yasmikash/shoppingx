@@ -35,8 +35,6 @@ export default class UserService {
   }
 
   async createUser(user: UserModel) {
-    // TODO validation logic should be implemented
-
     const userInstace = plainToClass(UserModel, user);
 
     const errors: ValidationError[] = await validate(userInstace);
@@ -52,7 +50,8 @@ export default class UserService {
     const carrier = (
       await this.carrierCollection.doc(userInstace.mobile.carrierId).get()
     ).data();
-    if (!carrier) return new HttpException(400, "No such carrier found", null);
+
+    if (!carrier) throw new HttpException(400, "No such carrier found", null);
 
     const createdUser = await this.usersCollection.doc().set(user);
     return createdUser;

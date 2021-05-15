@@ -11,7 +11,7 @@ export default class UserController {
   ): Promise<void> {
     try {
       const user = await userService.getUser(req.params.userId);
-      res.status(201).json(user);
+      res.status(200).json(user);
     } catch (error) {
       next(error);
     }

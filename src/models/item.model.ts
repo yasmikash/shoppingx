@@ -11,8 +11,4 @@ export default class ItemModel {
 
   @IsNumber()
   public price: number;
-
-  @IsString()
-  @Length(5)
-  public userId: string;
 }
