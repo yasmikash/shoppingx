@@ -10,7 +10,7 @@ const errorMiddleware = (
 ) => {
   const status: number = error.status || 500;
   const message: string = error.message || "Something went wrong";
-  const errors: BodyError[] | null = error.bodyErrors;
+  const errors: BodyError[] | null = error.bodyErrors || null;
 
   res.status(status).json({ message, errors });
 };

@@ -6,7 +6,7 @@ import MobileModel from "./mobile.model";
 export default class UserModel {
   @IsString()
   @Length(4)
-  username: string;
+  public uid: string;
 
   @IsString()
   @Length(2)

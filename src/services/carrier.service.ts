@@ -1,12 +1,12 @@
 import { validate, ValidationError } from "class-validator";
 import { plainToClass } from "class-transformer";
-import { FirebaseFirestore } from "@firebase/firestore-types";
 
-import db from "../firebase/db";
+import fbApp from "../firebase/app";
 import Carrier from "../models/carrier.model";
 import getBodyErrors from "../util/body-error.util";
 import HttpException from "../exceptions/HttpException";
 
+const { db } = fbApp;
 export default class CarrierService {
   public carrierCollection: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>;
 

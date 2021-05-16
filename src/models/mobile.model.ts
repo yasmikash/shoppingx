@@ -7,5 +7,5 @@ export default class Mobile {
 
   @IsString()
   @Length(10)
-  public mobileNumber: number;
+  public mobileNumber: string;
 }

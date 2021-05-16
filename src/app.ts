@@ -4,7 +4,6 @@ import express, { Application } from "express";
 import cors from "cors";
 
 import Route from "./interfaces/route.interface";
-import db from "./firebase/db";
 import errorMiddleware from "./middlewares/error.middleware";
 
 export default class App {
@@ -17,7 +16,6 @@ export default class App {
     this.app = express();
     this.port = process.env.PORT || 5000;
     this.env = process.env.NODE_ENV || "development";
-    this.db = db;
 
     this.initializeMiddlewares();
     this.initializeRoutes(routes);

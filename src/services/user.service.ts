@@ -1,11 +1,12 @@
 import { validate, ValidationError } from "class-validator";
 import { plainToClass } from "class-transformer";
-import { FirebaseFirestore } from "@firebase/firestore-types";
 
-import db from "../firebase/db";
+import fbApp from "../firebase/app";
 import UserModel from "../models/user.model";
 import getBodyErrors from "../util/body-error.util";
 import HttpException from "../exceptions/HttpException";
+
+const { db, auth } = fbApp;
 
 export default class UserService {
   public usersCollection: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>;
@@ -17,6 +18,9 @@ export default class UserService {
   }
 
   async getUser(userId: string) {
+    // Check if the user is available
+    await auth.getUser(userId);
+
     const user = (await this.usersCollection.doc(userId).get()).data();
 
     if (user) return user;
@@ -53,7 +57,10 @@ export default class UserService {
 
     if (!carrier) throw new HttpException(400, "No such carrier found", null);
 
-    const createdUser = await this.usersCollection.doc().set(user);
+    // Check if the user is available
+    await auth.getUser(user.uid);
+
+    const createdUser = await this.usersCollection.doc(user.uid).set(user);
     return createdUser;
   }
 }
