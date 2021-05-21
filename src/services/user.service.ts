@@ -7,7 +7,6 @@ import getBodyErrors from "../util/body-error.util";
 import HttpException from "../exceptions/HttpException";
 
 const { db, auth } = fbApp;
-
 export default class UserService {
   public usersCollection: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>;
   public carrierCollection: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>;
@@ -50,17 +49,12 @@ export default class UserService {
         getBodyErrors(errors, false)
       );
 
-    // Check if carrier exists
-    const carrier = (
-      await this.carrierCollection.doc(userInstace.mobile.carrierId).get()
-    ).data();
-
-    if (!carrier) throw new HttpException(400, "No such carrier found", null);
-
     // Check if the user is available
     await auth.getUser(user.uid);
 
     const createdUser = await this.usersCollection.doc(user.uid).set(user);
     return createdUser;
   }
+
+  async assigAddress() {}
 }
