@@ -1,12 +1,14 @@
 import { validate, ValidationError } from "class-validator";
 import { plainToClass } from "class-transformer";
+import { v4 } from "uuid";
 
 import fbApp from "../firebase/app";
 import ItemModel from "../models/item.model";
 import getBodyErrors from "../util/body-error.util";
 import HttpException from "../exceptions/HttpException";
+import configObj from "../util/config.util";
 
-const { db } = fbApp;
+const { db, storage } = fbApp;
 export default class ItemService {
   public itemsCollection: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>;
   public categoryCollection: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>;
@@ -16,7 +18,8 @@ export default class ItemService {
     this.categoryCollection = db.collection("categories");
   }
 
-  async createItem(item: ItemModel) {
+  //TODO Change files type
+  async createItem(item: ItemModel, files: any) {
     const itemInstace = plainToClass(ItemModel, item);
 
     const errors: ValidationError[] = await validate(itemInstace);
@@ -34,6 +37,35 @@ export default class ItemService {
     ).data();
     if (!category) throw new HttpException(400, "No such category found", null);
 
+    // Check if images are being uploaded
+    if (!files)
+      throw new HttpException(
+        400,
+        "One or more images of the item should be uploaded",
+        null
+      );
+    const fileNames = Object.keys(files);
+    const itemImages: string[] = [];
+
+    for (let i = 0; i < fileNames.length; i++) {
+      const file = files[fileNames[i]];
+      if (file.mimetype !== "image/jpeg")
+        throw new HttpException(400, `${file.name} has invalid mimetype`, null);
+      const fileToken = v4();
+      const filePath = `${configObj.uploadPath}/${fileToken}.jpg`;
+      await file.mv(filePath);
+      const metadata = {
+        metadata: {
+          firebaseStorageDownloadTokens: fileToken,
+        },
+        contentType: "image/jpeg",
+        cacheControl: "public, max-age=31536000",
+      };
+      await storage.bucket().upload(filePath, { gzip: true, metadata });
+      itemImages.push(`${configObj.cloudPublicUrlPath}/${fileToken}.jpg`);
+    }
+
+    item.images = itemImages;
     const createdItem = await this.itemsCollection.doc().set(item);
     return createdItem;
   }

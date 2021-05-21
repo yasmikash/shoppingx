@@ -2,6 +2,7 @@ require("reflect-metadata");
 
 import express, { Application } from "express";
 import cors from "cors";
+import fileUpload from "express-fileupload";
 
 import Route from "./interfaces/route.interface";
 import errorMiddleware from "./middlewares/error.middleware";
@@ -36,6 +37,7 @@ export default class App {
     this.app.use(cors());
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
+    this.app.use(fileUpload());
   }
 
   initializeRoutes(routes: Route[]) {
