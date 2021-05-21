@@ -1,13 +1,4 @@
-import { Type } from "class-transformer";
-import {
-  Length,
-  IsEmail,
-  ValidateNested,
-  IsString,
-  Matches,
-} from "class-validator";
-import AddressModel from "./address.model";
-import MobileModel from "./mobile.model";
+import { Length, IsString, Matches } from "class-validator";
 
 type UserType = "buyer" | "seller";
 export default class UserModel {
@@ -25,15 +16,4 @@ export default class UserModel {
   @IsString()
   @Length(2)
   public lastName: string;
-
-  @IsEmail()
-  public email: string;
-
-  @Type(() => MobileModel)
-  @ValidateNested({ always: true })
-  public mobile: MobileModel;
-
-  @Type(() => AddressModel)
-  @ValidateNested({ always: true })
-  public address: AddressModel;
 }
