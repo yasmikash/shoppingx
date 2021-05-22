@@ -69,4 +69,27 @@ export default class ItemService {
     const createdItem = await this.itemsCollection.doc().set(item);
     return createdItem;
   }
+
+  async getItems() {
+    const items: any = [];
+    const snapshot = await this.itemsCollection.get();
+
+    snapshot.forEach((doc: any) => {
+      items.push({ [doc.id]: doc.data() });
+    });
+
+    return items;
+  }
+
+  async getItem(itemId: string) {
+    const user = (await this.itemsCollection.doc(itemId).get()).data();
+
+    if (user) return user;
+    else throw new HttpException(400, "No such item found", null);
+  }
+
+  async deleteItem(itemId: string) {
+    const response = await this.itemsCollection.doc(itemId).delete();
+    return response;
+  }
 }

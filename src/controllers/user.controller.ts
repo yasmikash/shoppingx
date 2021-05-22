@@ -42,4 +42,30 @@ export default class UserController {
       next(error);
     }
   }
+
+  async assignAddress(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const user = await userService.assigAddress(req.params.userId, req.body);
+      res.status(200).json(user);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async assignMobile(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const user = await userService.assigMobile(req.params.userId, req.body);
+      res.status(200).json(user);
+    } catch (error) {
+      next(error);
+    }
+  }
 }

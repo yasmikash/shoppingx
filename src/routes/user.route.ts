@@ -19,5 +19,13 @@ export default class UserRoute {
     this.router.get(`${this.path}`, this.userController.getUsers);
     this.router.get(`${this.path}/:userId`, this.userController.getUser);
     this.router.post(`${this.path}`, this.userController.createUser);
+    this.router.post(
+      `${this.path}/:userId/addresses/assign`,
+      this.userController.assignAddress
+    );
+    this.router.post(
+      `${this.path}/:userId/mobiles/assign`,
+      this.userController.assignMobile
+    );
   }
 }

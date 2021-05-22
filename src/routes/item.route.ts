@@ -17,5 +17,8 @@ export default class ItemRoute {
 
   initializeRoutes() {
     this.router.post(`${this.path}`, this.itemController.createItem);
+    this.router.get(`${this.path}`, this.itemController.getItems);
+    this.router.get(`${this.path}/:itemId`, this.itemController.getItem);
+    this.router.delete(`${this.path}/:itemId`, this.itemController.deleteItem);
   }
 }

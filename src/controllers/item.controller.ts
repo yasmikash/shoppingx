@@ -25,4 +25,43 @@ export default class UserController {
       next(error);
     }
   }
+
+  async getItems(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const items = await itemService.getItems();
+      res.status(200).json(items);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getItem(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const item = await itemService.getItem(req.params.itemId);
+      res.status(200).json(item);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async deleteItem(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      await itemService.deleteItem(req.params.itemId);
+      res.status(200);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
