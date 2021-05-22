@@ -77,6 +77,9 @@ export default class ItemService {
     snapshot.forEach((doc: any) => {
       const obj = doc.data();
       obj.id = doc.id;
+      obj.total = 0;
+      obj.count = 0;
+      obj.inCart = false;
       items.push(obj);
     });
 
@@ -91,6 +94,9 @@ export default class ItemService {
       const obj = doc.data();
       if (obj.categoryId === categoryId) {
         obj.id = doc.id;
+        obj.total = 0;
+        obj.count = 0;
+        obj.inCart = false;
         items.push(obj);
       }
     });
@@ -99,10 +105,14 @@ export default class ItemService {
   }
 
   async getItem(itemId: string) {
-    const user = (await this.itemsCollection.doc(itemId).get()).data();
+    const item = (await this.itemsCollection.doc(itemId).get()).data();
 
-    if (user) return user;
-    else throw new HttpException(400, "No such item found", null);
+    if (item) {
+      item.total = 0;
+      item.count = 0;
+      item.inCart = false;
+      return item;
+    } else throw new HttpException(400, "No such item found", null);
   }
 
   async deleteItem(itemId: string) {
