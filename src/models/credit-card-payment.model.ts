@@ -1,4 +1,6 @@
-import { IsEmail, IsString, Length } from "class-validator";
+import { Type } from "class-transformer";
+import { IsEmail, IsString, Length, ValidateNested } from "class-validator";
+import CartModel from "./cart.model";
 
 export default class CreditCardPayment {
   @IsString()
@@ -26,4 +28,8 @@ export default class CreditCardPayment {
   @IsString()
   @Length(2)
   public country: string;
+
+  @ValidateNested()
+  @Type(() => CartModel)
+  public cart: CartModel;
 }

@@ -11,13 +11,15 @@ import getBodyErrors from "../util/body-error.util";
 import HttpException from "../exceptions/HttpException";
 import CreditCardPaymentModel from "../models/credit-card-payment.model";
 
-const { db, auth } = fbApp;
+const { db } = fbApp;
 
 export default class CreditCardPaymentService {
   public cardCollection: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>;
+  public cartCollection: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>;
 
   constructor() {
     this.cardCollection = db.collection("cards");
+    this.cartCollection = db.collection("carts");
   }
 
   async createPayment(card: CreditCardPaymentModel) {
@@ -32,6 +34,9 @@ export default class CreditCardPaymentService {
         getBodyErrors(errors, false)
       );
 
+    //TODO Calculated the amount
+    const amount = 2000;
+
     const cardToken = await stripe.tokens.create({
       card: {
         number: card.cardNumber,
@@ -43,16 +48,20 @@ export default class CreditCardPaymentService {
     });
 
     const charge = await stripe.charges.create({
-      amount: 2000,
+      amount: amount,
       currency: "usd",
       source: cardToken.id,
       receipt_email: card.email,
-      description: `Stripe Charge Of Amount 2000 for One Time Payment`,
+      description: `ShoppingX Payment Receipt of ${amount} USD`,
     });
 
     if (charge.status !== "succeeded")
       throw new HttpException(400, "Card payment error", null);
 
-    console.log(charge);
+    card.cart.amount = amount;
+    card.cart.receipt = charge.receipt_url;
+
+    await this.cartCollection.doc().set(card);
+    return card;
   }
 }

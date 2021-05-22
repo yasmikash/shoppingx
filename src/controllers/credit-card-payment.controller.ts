@@ -10,8 +10,8 @@ export default class CreditCardPaymentController {
     next: NextFunction
   ): Promise<void> {
     try {
-      await creditCardPaymentService.createPayment(req.body);
-      res.status(200).json({ msg: "OK" });
+      const card = await creditCardPaymentService.createPayment(req.body);
+      res.status(201).json(card);
     } catch (error) {
       next(error);
     }

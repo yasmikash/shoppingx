@@ -75,7 +75,9 @@ export default class ItemService {
     const snapshot = await this.itemsCollection.get();
 
     snapshot.forEach((doc: any) => {
-      items.push({ [doc.id]: doc.data() });
+      const obj = doc.data();
+      obj.id = doc.id;
+      items.push(obj);
     });
 
     return items;

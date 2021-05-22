@@ -19,7 +19,9 @@ export default class CategoryService {
     const snapshot = await this.categoryCollection.get();
 
     snapshot.forEach((doc: any) => {
-      categories.push({ [doc.id]: doc.data() });
+      const obj = doc.data();
+      obj.id = doc.id;
+      categories.push(obj);
     });
 
     return categories;

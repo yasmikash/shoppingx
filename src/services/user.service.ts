@@ -30,7 +30,9 @@ export default class UserService {
     const snapshot = await this.usersCollection.get();
 
     snapshot.forEach((doc: any) => {
-      users.push({ [doc.id]: doc.data() });
+      const obj = doc.data();
+      obj.id = doc.id;
+      users.push(obj);
     });
 
     return users;
