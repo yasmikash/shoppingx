@@ -83,6 +83,21 @@ export default class ItemService {
     return items;
   }
 
+  async getItemsByCategory(categoryId: string) {
+    const items: any = [];
+    const snapshot = await this.itemsCollection.get();
+
+    snapshot.forEach((doc: any) => {
+      const obj = doc.data();
+      if (obj.categoryId === categoryId) {
+        obj.id = doc.id;
+        items.push(obj);
+      }
+    });
+
+    return items;
+  }
+
   async getItem(itemId: string) {
     const user = (await this.itemsCollection.doc(itemId).get()).data();
 

@@ -39,6 +39,19 @@ export default class UserController {
     }
   }
 
+  async getItemsByCategory(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const items = await itemService.getItemsByCategory(req.params.categoryId);
+      res.status(200).json(items);
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async getItem(
     req: Request,
     res: Response,
