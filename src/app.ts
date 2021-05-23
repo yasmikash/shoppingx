@@ -42,7 +42,7 @@ export default class App {
 
   initializeRoutes(routes: Route[]) {
     routes.forEach((route) => {
-      this.app.use("/", route.router);
+      this.app.use("/api", route.router);
     });
   }
 

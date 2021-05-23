@@ -16,10 +16,12 @@ const { db } = fbApp;
 export default class CreditCardPaymentService {
   public cardCollection: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>;
   public cartCollection: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>;
+  public itemsCollection: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>;
 
   constructor() {
     this.cardCollection = db.collection("cards");
     this.cartCollection = db.collection("carts");
+    this.itemsCollection = db.collection("items");
   }
 
   async createPayment(card: CreditCardPaymentModel) {
@@ -34,8 +36,15 @@ export default class CreditCardPaymentService {
         getBodyErrors(errors, false)
       );
 
-    //TODO Calculated the amount
-    const amount = 2000;
+    let totalAmount = 0;
+
+    for (let i = 0; i < card.cart.items.length; i++) {
+      const item = (
+        await this.itemsCollection.doc(card.cart.items[i]).get()
+      ).data();
+      if (!item) throw new HttpException(400, "No such item found", null);
+      totalAmount += item.price;
+    }
 
     const cardToken = await stripe.tokens.create({
       card: {
@@ -48,17 +57,17 @@ export default class CreditCardPaymentService {
     });
 
     const charge = await stripe.charges.create({
-      amount: amount,
+      amount: totalAmount * 100,
       currency: "usd",
       source: cardToken.id,
       receipt_email: card.email,
-      description: `ShoppingX Payment Receipt of ${amount} USD`,
+      description: `ShoppingX Payment Receipt of ${totalAmount} USD`,
     });
 
     if (charge.status !== "succeeded")
       throw new HttpException(400, "Card payment error", null);
 
-    card.cart.amount = amount;
+    card.cart.amount = totalAmount;
     card.cart.receipt = charge.receipt_url;
     card.cart.type = "card";
 
