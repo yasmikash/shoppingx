@@ -1,5 +1,4 @@
 import path from "path";
-
 interface Config {
   storageBucket: string;
   uploadPath: string;

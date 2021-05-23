@@ -23,6 +23,10 @@ export default class ItemRoute {
       `${this.path}/categories/:categoryId`,
       this.itemController.getItemsByCategory
     );
+    this.router.get(
+      `${this.path}/users/:userId`,
+      this.itemController.getItemsByCategory
+    );
     this.router.delete(`${this.path}/:itemId`, this.itemController.deleteItem);
   }
 }

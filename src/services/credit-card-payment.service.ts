@@ -60,6 +60,7 @@ export default class CreditCardPaymentService {
 
     card.cart.amount = amount;
     card.cart.receipt = charge.receipt_url;
+    card.cart.type = "card";
 
     await this.cartCollection.doc().set(card);
     return card;

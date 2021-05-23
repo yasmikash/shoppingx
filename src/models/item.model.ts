@@ -1,9 +1,12 @@
-import { isArray, IsNumber, IsString, Length } from "class-validator";
-
+import { IsNumber, IsString, Length } from "class-validator";
 export default class ItemModel {
   @IsString()
   @Length(5)
   public categoryId: string;
+
+  @IsString()
+  @Length(5)
+  public userId: string;
 
   @IsString()
   @Length(2)

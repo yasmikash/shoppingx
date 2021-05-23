@@ -104,6 +104,24 @@ export default class ItemService {
     return items;
   }
 
+  async getItemsByUser(userId: string) {
+    const items: any = [];
+    const snapshot = await this.itemsCollection.get();
+
+    snapshot.forEach((doc: any) => {
+      const obj = doc.data();
+      if (obj.userId === userId) {
+        obj.id = doc.id;
+        obj.total = 0;
+        obj.count = 0;
+        obj.inCart = false;
+        items.push(obj);
+      }
+    });
+
+    return items;
+  }
+
   async getItem(itemId: string) {
     const item = (await this.itemsCollection.doc(itemId).get()).data();
 

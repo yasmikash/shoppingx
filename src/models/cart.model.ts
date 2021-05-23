@@ -1,5 +1,6 @@
 import { IsString, Length } from "class-validator";
 
+type PaymentType = "card" | "mobile";
 export default class CartModel {
   @IsString()
   @Length(2)
@@ -11,4 +12,6 @@ export default class CartModel {
   public receipt: string | null;
 
   public amount: number;
+
+  public type: PaymentType;
 }
