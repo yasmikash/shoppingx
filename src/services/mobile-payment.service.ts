@@ -12,9 +12,11 @@ const { db } = fbApp;
 
 export default class MobilePaymentService {
   public cartCollection: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>;
+  public itemsCollection: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>;
 
   constructor() {
     this.cartCollection = db.collection("carts");
+    this.itemsCollection = db.collection("items");
   }
 
   async createPayment(cart: CartModel) {
@@ -29,7 +31,13 @@ export default class MobilePaymentService {
         getBodyErrors(errors, false)
       );
 
-    // TODO Check if number exists for the user
+    let totalAmount = 0;
+
+    for (let i = 0; i < cart.items.length; i++) {
+      const item = (await this.itemsCollection.doc(cart.items[i]).get()).data();
+      if (!item) throw new HttpException(400, "No such item found", null);
+      totalAmount += item.price;
+    }
 
     const snsMessage = new AWS.SNS({
       apiVersion: "2010-03-31",
@@ -45,17 +53,10 @@ export default class MobilePaymentService {
       },
     });
 
-    snsMessage.send((err, data) => {
-      console.log(err, data);
-    });
+    cart.amount = totalAmount;
+    cart.type = "mobile";
 
-    // if (charge.status !== "succeeded")
-    //   throw new HttpException(400, "Card payment error", null);
-
-    // card.cart.amount = amount;
-    // card.cart.receipt = charge.receipt_url;
-
-    // await this.cartCollection.doc().set(card);
-    // return card;
+    await this.cartCollection.doc().set(cart);
+    return cart;
   }
 }
