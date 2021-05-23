@@ -25,7 +25,7 @@ export default class ItemRoute {
     );
     this.router.get(
       `${this.path}/users/:userId`,
-      this.itemController.getItemsByCategory
+      this.itemController.getItemsByUser
     );
     this.router.delete(`${this.path}/:itemId`, this.itemController.deleteItem);
   }
